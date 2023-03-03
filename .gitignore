@@ -8,7 +8,6 @@ constant.py
 *.jpg
 *.joblib
 .vscode
-test.py
 *.zip
 *copy*
 weights
