@@ -23,6 +23,7 @@ import config as cfg
 from face_models import * 
 from checkin import Checkin
 from sendlog import SendLog
+# from test import Checkin_test
 
 class Response(BaseModel):
     url: Optional[str] = None
@@ -63,9 +64,9 @@ def face_predict():
         res = face_model.face_recog(img)
         
         if res == 'unknown':
-            js = {'label':'Không nhận diện được', 'status':False}
+            js = {'label':'Not recognize', 'status':False}
         else:
-            js = {'label':'Nhận diện ra ' + str(res), 'status':True}
+            js = {'label':'Recognize ' + str(res), 'status':True}
         
         return json.dumps(js,ensure_ascii=False).encode('utf8')
     
@@ -91,9 +92,9 @@ def face_predict():
         pred = pred.strip(', ')
         
         if pred == '':
-            js = {'label':'Không nhận diện được', 'status':False}
+            js = {'label':'Not recognize', 'status':False}
         else:
-            js = {'label':'Nhận diện ra ' + str(pred), 'status':True}
+            js = {'label':'Recognize ' + str(pred), 'status':True}
         
         return json.dumps(js,ensure_ascii=False).encode('utf8')
 
@@ -111,21 +112,21 @@ def register():
     img = np.uint8(img)
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     if int(label['face_mask']) == 0:
-        face_mask = 'Không có khẩu trang'
+        face_mask = 'No mask'
     else:
-        face_mask = 'Có khẩu trang'
+        face_mask = 'Mask'
     utils.save_image(img, face_mask + ' - ' + label['name'] + ' - ' + label['email'] + ' - ' + label['employee_code'])
     try:
         add_result = face_model.addNewFace(img, label)
         if add_result == True:
-            js = {'msg':'Đăng ký khuôn mặt thành công', 'status': True}
+            js = {'msg':'Register successfully', 'status': True}
             return json.dumps(js,ensure_ascii=False).encode('utf8')
         else:
-            js = {'msg':'Đăng ký khuôn mặt không thành công', 'status': False}
+            js = {'msg':'Register unsuccessfully', 'status': False}
             return json.dumps(js,ensure_ascii=False).encode('utf8')           
     
     except Exception as e:
-        js = {'msg':'Đăng ký khuôn mặt không thành công', 'status': False}
+        js = {'msg':'Register unsuccesfully', 'status': False}
         print("ERROR: Add new face | ", e)
         return json.dumps(js,ensure_ascii=False).encode('utf8')
 
@@ -142,9 +143,9 @@ def face_anti_spoof_predict():
     res = face_model.face_check(img)
         
     if res == True:
-        js = {'label':'Khuôn mặt thật', 'status':True}
+        js = {'label':'Real face', 'status':True}
     else:
-        js = {'label':'Khuôn mặt giả mạo', 'status':False}
+        js = {'label':'Fake face', 'status':False}
         
     return json.dumps(js,ensure_ascii=False).encode('utf8')
 
@@ -171,13 +172,13 @@ def update_info():
         js = {
             'status': 1,
             'code': 200,
-            'message': 'Cập nhật thông tin thành công'
+            'message': 'Update successfully.'
         }
     else:
         js = {
             'status': 1,
             'code': 400,
-            'message': 'Cập nhật thông tin không thành công. Không tìm thấy địa chỉ email'
+            'message': 'Update unsuccessfully. Not found email.'
         }
         
     return jsonify(js)
@@ -300,18 +301,19 @@ def thread_sendmail():
         
 def api():
     app.run(utils.get_ip(), cfg.port, threaded=True, debug=False)
-    
+
+
+
 def main():
     t1 = threading.Thread(target=api)
-    t2 = threading.Thread(target=checkin)
-    t3 = threading.Thread(target=thread_sendmail)
+    # t2 = threading.Thread(target=checkin)
+    # t3 = threading.Thread(target=thread_sendmail)
     
     t1.start()
-    t2.start()
-    t3.start()
-
+    # t2.start()
+    # t3.start()
+   
     t1.join()
-    t2.join()
-    t3.join()
-
+    # t2.join()
+    # t3.join()
 main()

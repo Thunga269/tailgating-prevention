@@ -41,7 +41,7 @@ class FaceAnalysis:
         assert 'detection' in self.models
         self.det_model = self.models['detection']
 
-    def prepare(self, ctx_id, det_thresh=0.5, det_size=(640, 640)):
+    def prepare(self, ctx_id, det_thresh=0.4, det_size=(640, 640)):
         self.det_thresh = det_thresh
         assert det_size is not None
         print('set det-size:', det_size)

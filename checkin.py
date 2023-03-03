@@ -14,7 +14,7 @@ class Checkin(object):
         self.face_model = face_model
         self.frame = None
         self.sendlog = sendlog
-        self.telegram_warning = cfg.config_sendlog['telegram_warning']
+        # self.telegram_warning = cfg.config_sendlog['telegram_warning']
             
     def process_checkin(self):
         prev_frame_time = 0
@@ -44,13 +44,13 @@ class Checkin(object):
                         print('ERROR: Face Checkin | ', ex)             
                         if self.face_model.lock.locked():
                             self.face_model.lock.release()
-                    message = ''
-                    for per in res:
-                        if per['name'] != 'unknown' and per['name'] != 'spoof_face':
-                            message += per['name'] + ' '           
-                    if message.strip() != '':
-                        self.sendlog.send_telegram_message(
-                            message + str(datetime.datetime.now().replace(microsecond=0)))
+                    # message = ''
+                    # for per in res:
+                    #     if per['name'] != 'unknown' and per['name'] != 'spoof_face':
+                    #         message += per['name'] + ' '           
+                    # if message.strip() != '':
+                    #     self.sendlog.send_telegram_message(
+                    #         message + str(datetime.datetime.now().replace(microsecond=0)))
                       
                 except Exception as ex:
                     print('ERROR: checkin file | ', ex)

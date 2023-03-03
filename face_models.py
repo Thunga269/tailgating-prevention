@@ -53,7 +53,7 @@ class FaceModel(object):
         
         self.check_sendmail = cfg.check_sendmail
         
-        self.area_threshold = 13500
+        self.area_threshold = 10000   #13500
 
     def addNewFace(self, img, label):
         img = np.array(img)
@@ -101,8 +101,9 @@ class FaceModel(object):
                 res.append({'name': 'unknown'})
                 continue
                 
-            input_fas = preprocess_image_fasnet(img_process, landmark[i])
-            check = self.model_fas.fas_predict(input_fas)
+            # input_fas = preprocess_image_fasnet(img_process, landmark[i])
+            # check = self.model_fas.fas_predict(input_fas)
+            check = True
             if check == False:
                 cv2.rectangle(dimg, (int(bbox[i][0]), int(bbox[i][1])), (int(bbox[i][2]), int(bbox[i][3])), (0, 0, 255), 2)
                 cv2.putText(dimg, 'spoof_face', (int(bbox[i][0]),int(bbox[i][1])-5), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 1)
@@ -128,8 +129,8 @@ class FaceModel(object):
             bbox = face.bbox.astype(np.int)
             cv2.rectangle(dimg, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 0, 255), 2)
             cv2.putText(dimg, pred['name'], (bbox[0],bbox[1]-5), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 0), 1)
-
-            if pred != 'unknown':
+            
+            if pred['name'] != 'unknown':
                 checkin_time = datetime.datetime.now().replace(microsecond=0)
                 checkin_timestamp = str(int(datetime.datetime.timestamp(checkin_time)))
                 
